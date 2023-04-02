@@ -81,6 +81,8 @@ def dSdt(S, t, g, m1, m2, L1, L2):
 
 n_times = 1001
 t = np.linspace(0, 200, n_times)
+
+
 g = 9.81
 m1=2
 m2=1
@@ -89,7 +91,7 @@ L2 = 1
 y0=[1, -3, -1, 5]#y0 = conditions initlae de dSdT => the1, z1(=vitesse angulaire), the2 et z2
 ans_1 = odeint(dSdt, y0, t=t, args=(g,m1,m2,L1,L2)) #"true value of hypothetical model"
 
-
+the2=ans_1.T[2]
 
 
 #matrix of initial condition 
@@ -119,39 +121,9 @@ for i in range (n_perturbation):
     answ=odeint(dSdt, cond_init[i,:], t=t, args=(g,m1,m2,L1,L2))
     the2_all=answ.T[2]
     res_array[i,:]=the2_all
-    plt.plot(t,the2_all)
+    plt.plot(t,the2_all, color="#D3D3D3", alpha=0.8)
 
-
-
-
-the1 = ans_1.T[0]
-the2 = ans_1.T[2]
-
-#plot with n_pertubation runs
-plt.plot(t, the2,"-r", label="hypothetic true value", linewidth=4)
-plt.xlabel('time')
-plt.ylabel('the2')
-plt.legend()
-plt.show()
-
-
-#plot for the true value of the hypothetic value only
-plt.plot(t, the2, "-b", label="hypothetic true value")
-plt.xlabel('time')
-plt.ylabel('the2')
-plt.title('Chaotic behavior of the double pendulum')
-plt.legend()
-plt.show()
-
-
-plt.plot(t, the2, "-b", label="hypothetic true value")
-plt.plot(t,res_array[4,:],"-r", label="hypothetic small errors in initial conditions")
-plt.xlabel('time')
-plt.ylabel('the2')
-plt.title('Chaotic behavior of the double pendulum')
-plt.legend()
-plt.show()
-
+#calculation of interesting value of the model    
 mean_all=np.zeros(shape=(1,n_times)) #creating array full of 0 shaped for each timesptep
 max_all=np.zeros(shape=(1,n_times))
 min_all=np.zeros(shape=(1,n_times))
@@ -162,15 +134,57 @@ for i in range (n_times):
     max_all[:,i]=maxi      #filling the array of 95th quantile for each timestep
     mini=np.min(res_array[:,i])
     min_all[:,i]=mini
-
-plt.plot(t, the2, "-b", label="hypothetic true value")
+ 
+#plot of all runs + interesting value
+for i in range (n_perturbation):
+    plt.plot(t,res_array[i,:], color="#D3D3D3", alpha=0.8)
 plt.plot(t,np.transpose(mean_all),"-g", label="mean value of the ensemble")
-plt.plot(t,np.transpose(max_all),"-r", label="upper limit of the ensemble")
-plt.plot(t,np.transpose(min_all),"-r", label="lower limit of the ensemble")
-plt.xlabel('time')
-plt.ylabel('the2')
+plt.plot(t,np.transpose(max_all),color ="#90EE90", label="upper limit of the ensemble")
+plt.plot(t,np.transpose(min_all),color ="#90EE90", label="lower limit of the ensemble")
+plt.plot(t, the2, "-b", label="hypothetic true value")
+plt.plot(t,res_array[4,:],"-r", label="hypothetic small errors in initial conditions")
+plt.xlabel('time [s]')
+plt.ylabel('θ2 [rad]')
 plt.title('Visualisation of ensemble model')
 plt.legend()
+plt.show()
 
 
-#test
+
+#plot for the true value of the hypothetic value only
+plt.plot(t, the2, "-b", label="hypothetic true value")
+plt.xlabel('time [s]')
+plt.ylabel('θ2 [rad]')
+plt.title('Chaotic behavior of the double pendulum')
+plt.legend()
+plt.show()
+
+#plot with two run, deterministic model
+plt.plot(t, the2, "-b", label="hypothetic true value")
+plt.plot(t,res_array[4,:],"-r", label="hypothetic small errors in initial conditions")
+plt.xlabel('time [s]')
+plt.ylabel('θ2 [rad]')
+plt.title('Chaotic behavior of the double pendulum')
+plt.legend()
+plt.show()
+
+#calcultation of errors
+
+mean_error=(the2-mean_all)**2
+two_runs_errors=(the2-res_array[4,:])**2
+
+#plot of errors
+plt.plot(t,np.transpose(mean_error),"-g", label="Quadratic error to the mean value")
+plt.plot(t,two_runs_errors,"-r", label="Quadratic error to hypothetic small errors in initial condition")
+plt.xlabel('time [s]')
+plt.ylabel('quadratic error [rad]')
+plt.title("Visualisation of errors")
+plt.legend()
+plt.show()
+
+
+    
+
+
+
+
