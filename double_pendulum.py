@@ -244,14 +244,14 @@ plt.show()
 #comparing with stochastic parametrization
 for i in range (n_perturbation):
     plt.plot(t,res_array_sto_para[i,:], color="#D3D3D3", alpha=0.8)
-plt.plot(t,np.transpose(mean_all_sto),"-g", label="mean value of the SPPT scheme")
+plt.plot(t,np.transpose(mean_all_sto),"-g", label="mean value of the parametrization stochastic ensemble")
 plt.plot(t,np.transpose(max_all_sto),color ="#90EE90", label="upper limit")
 plt.plot(t,np.transpose(min_all_sto),color ="#90EE90", label="lower limit ")
 plt.plot(t, the2, "-b", label="hypothetic true value")
 plt.plot(t,res_array[50,:],"-r", label="small errors in initial conditions")
 plt.xlabel('time [s]')
 plt.ylabel('θ2 [rad]')
-plt.title('Visualisation of SPPT scheme')
+plt.title('Visualisation of stochastic parametrization ensemble model')
 plt.legend()
 plt.show()
 
@@ -270,12 +270,6 @@ plt.title("Visualisation of errors with stochastic parametrization")
 plt.legend()
 plt.show()
 
-#comparison with and withou SPPT scheme
-plt.plot(t,np.transpose(mean_error_sto),"-g", label="SPPT on")
-plt.plot(t,np.transpose(mean_error),"-r", label="SPPT off")
-plt.xlabel('time [s]')
-plt.ylabel('quadratic error [rad]')
-plt.title("Comparison of errors with and without SPPT")
-plt.legend()
-plt.show()
+
+
 
